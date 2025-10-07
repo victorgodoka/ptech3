@@ -5,14 +5,22 @@ import { getStorage } from "firebase/storage";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// Usando variáveis de ambiente do Expo
 const firebaseConfig = {
-  apiKey: "AIzaSyDciebbgTgl7r68F-0N3L0ZksV-mUJBL28",
-  authDomain: "posttech3-6e21d.firebaseapp.com",
-  projectId: "posttech3-6e21d",
-  storageBucket: "posttech3-6e21d.firebasestorage.app",
-  messagingSenderId: "980953652993",
-  appId: "1:980953652993:web:65bf66e24c9399da1c8500"
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID
 };
+
+// Validar se todas as variáveis de ambiente estão configuradas
+if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+  throw new Error(
+    '❌ Configuração do Firebase incompleta! Verifique se o arquivo .env está configurado corretamente.'
+  );
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

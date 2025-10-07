@@ -38,7 +38,19 @@ Um aplicativo completo de gerenciamento financeiro pessoal desenvolvido com Reac
    - Ative Authentication (Email/Password)
    - Ative Firestore Database
    - Ative Storage (para anexos)
-   - Copie as credenciais e configure em `app/firebase/config.ts`
+   - Copie o arquivo `.env.example` para `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edite o arquivo `.env` e adicione suas credenciais do Firebase:
+     ```env
+     EXPO_PUBLIC_FIREBASE_API_KEY=sua_api_key
+     EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=seu_auth_domain
+     EXPO_PUBLIC_FIREBASE_PROJECT_ID=seu_project_id
+     EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=seu_storage_bucket
+     EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=seu_messaging_sender_id
+     EXPO_PUBLIC_FIREBASE_APP_ID=seu_app_id
+     ```
 
 4. **Inicie o projeto**
    ```bash
@@ -218,6 +230,33 @@ O Dashboard possui **duas abas principais**:
 - ✅ Dados protegidos por usuário
 - ✅ Rotas protegidas
 - ✅ Logout seguro
+- ✅ Credenciais em variáveis de ambiente
+
+## 🔒 Segurança e Variáveis de Ambiente
+
+### **Arquivo `.env`**
+
+O projeto utiliza variáveis de ambiente para proteger as credenciais do Firebase. O arquivo `.env` **NÃO** está versionado no Git por questões de segurança.
+
+### **Importante**
+
+- ⚠️ **NUNCA** commite o arquivo `.env` no repositório
+- ✅ Use o arquivo `.env.example` como referência
+- ✅ Cada desenvolvedor deve ter seu próprio `.env`
+- ✅ Em produção, configure as variáveis no ambiente de deploy
+
+### **Estrutura das Variáveis**
+
+Todas as variáveis de ambiente do Expo devem começar com `EXPO_PUBLIC_` para serem acessíveis no código:
+
+```env
+EXPO_PUBLIC_FIREBASE_API_KEY=...
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=...
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+EXPO_PUBLIC_FIREBASE_APP_ID=...
+```
 
 ---
 
