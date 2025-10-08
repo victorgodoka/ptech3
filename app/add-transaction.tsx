@@ -21,7 +21,6 @@ const AddTransactionContent = () => {
   const [existingReceiptUrl, setExistingReceiptUrl] = useState<string | null>(null);
   const [existingReceiptName, setExistingReceiptName] = useState<string | null>(null);
 
-  // Carregar dados da transação se estiver editando
   useEffect(() => {
     if (isEditing && id) {
       const transaction = transactions.find(t => t.id === id);
@@ -32,7 +31,6 @@ const AddTransactionContent = () => {
         setAmount(formatCurrencyInput(transaction.amount));
         setCategory(transaction.category);
         
-        // Carregar arquivo anexo se existir
         if (transaction.receiptUrl) {
           setExistingReceiptUrl(transaction.receiptUrl);
           setExistingReceiptName(transaction.receiptName || 'Anexo existente');
@@ -46,7 +44,6 @@ const AddTransactionContent = () => {
     expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Entretenimento', 'Compras', 'Contas', 'Outros']
   };
 
-  // Função para formatar o valor em centavos para exibição
   const formatCurrencyInput = (cents: number) => {
     const reais = cents / 100;
     return reais.toLocaleString('pt-BR', {
@@ -55,24 +52,19 @@ const AddTransactionContent = () => {
     });
   };
 
-  // Função para lidar com a mudança do valor
   const handleAmountChange = (text: string) => {
-    // Remove tudo que não é número
     const numbers = text.replace(/\D/g, '');
     
-    // Se vazio, volta para 0
     if (numbers === '') {
       setAmount('0,00');
       return;
     }
     
-    // Converte para número e formata
     const cents = parseInt(numbers);
     const formatted = formatCurrencyInput(cents);
     setAmount(formatted);
   };
 
-  // Função para converter o valor exibido para centavos
   const getAmountInCents = () => {
     const numbers = amount.replace(/\D/g, '');
     return parseInt(numbers) || 0;
@@ -89,7 +81,6 @@ const AddTransactionContent = () => {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const file = result.assets[0];
         
-        // Converter para File object
         const response = await fetch(file.uri);
         const blob = await response.blob();
         const fileObject = new File([blob], file.name, { type: file.mimeType || 'application/octet-stream' });
@@ -129,7 +120,6 @@ const AddTransactionContent = () => {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const image = result.assets[0];
         
-        // Converter para File object
         const response = await fetch(image.uri);
         const blob = await response.blob();
         const fileName = `receipt_${Date.now()}.jpg`;
@@ -151,7 +141,6 @@ const AddTransactionContent = () => {
 
   const handleAttachReceipt = () => {
     if (receiptFile) {
-      // Se já tem arquivo, mostrar opções
       Alert.alert(
         'Gerenciar Anexo',
         `Arquivo atual: ${receiptFile.name}`,
@@ -170,7 +159,6 @@ const AddTransactionContent = () => {
         ]
       );
     } else {
-      // Se não tem arquivo, mostrar opções
       showAttachmentOptions();
     }
   };
@@ -201,7 +189,6 @@ const AddTransactionContent = () => {
 
     try {
       if (isEditing && id) {
-        // Modo de edição
         console.log('💾 Atualizando transação:', id);
         
         await updateTransaction(id, {
@@ -226,7 +213,6 @@ const AddTransactionContent = () => {
           ]
         );
       } else {
-        // Modo de criação
         console.log('💾 Iniciando salvamento da transação:', {
           title,
           amount: amountInCents,
@@ -234,7 +220,6 @@ const AddTransactionContent = () => {
           category
         });
 
-        // Timeout de 30 segundos
         const timeoutPromise = new Promise((_, reject) => 
           setTimeout(() => reject(new Error('Timeout: Operação demorou mais de 30 segundos')), 30000)
         );
@@ -273,7 +258,6 @@ const AddTransactionContent = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
@@ -285,7 +269,6 @@ const AddTransactionContent = () => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* Transaction Type */}
         <View style={styles.typeContainer}>
           <View style={styles.typeSelector}>
             <TouchableOpacity
@@ -334,9 +317,7 @@ const AddTransactionContent = () => {
           </View>
         </View>
 
-        {/* Form Fields */}
         <View style={styles.formContainer}>
-          {/* Title */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Título *</Text>
             <TextInput
@@ -348,7 +329,6 @@ const AddTransactionContent = () => {
             />
           </View>
 
-          {/* Amount */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Valor *</Text>
             <View style={styles.amountContainer}>
@@ -364,7 +344,6 @@ const AddTransactionContent = () => {
             </View>
           </View>
 
-          {/* Category */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Categoria *</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -390,7 +369,6 @@ const AddTransactionContent = () => {
             </ScrollView>
           </View>
 
-          {/* Description */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Descrição</Text>
             <TextInput
@@ -404,7 +382,6 @@ const AddTransactionContent = () => {
             />
           </View>
 
-          {/* Attachment */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Anexo</Text>
             <TouchableOpacity 
@@ -426,7 +403,6 @@ const AddTransactionContent = () => {
               </Text>
             </TouchableOpacity>
             
-            {/* Novo anexo selecionado */}
             {receiptFile && (
               <View style={styles.attachmentPreview}>
                 <View style={styles.attachmentInfo}>
@@ -448,7 +424,6 @@ const AddTransactionContent = () => {
               </View>
             )}
 
-            {/* Anexo existente (quando editando) */}
             {!receiptFile && existingReceiptUrl && (
               <View style={styles.existingAttachment}>
                 <View style={styles.attachmentInfo}>
@@ -498,7 +473,6 @@ const AddTransactionContent = () => {
           </View>
         </View>
 
-        {/* Save Button */}
         <View style={styles.saveContainer}>
           <TouchableOpacity 
             onPress={handleSave} 
@@ -511,7 +485,6 @@ const AddTransactionContent = () => {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <View style={styles.bottomNavGradient}>
           <View style={styles.bottomNavBlur}>

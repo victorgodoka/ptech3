@@ -26,7 +26,6 @@ import { Transaction, TransactionInput, TransactionFilter, TransactionSummary, C
 export class TransactionService {
   private collectionName = 'transactions';
 
-  // Criar nova transação
   async createTransaction(userId: string, transactionData: TransactionInput): Promise<string> {
     try {
       console.log('🔥 TransactionService: Iniciando createTransaction para userId:', userId);
@@ -35,7 +34,6 @@ export class TransactionService {
       let receiptUrl = '';
       let receiptName = '';
 
-      // Upload do recibo se fornecido
       if (transactionData.receiptFile) {
         console.log('📎 TransactionService: Fazendo upload do recibo...');
         const uploadResult = await this.uploadReceipt(userId, transactionData.receiptFile);
@@ -68,7 +66,6 @@ export class TransactionService {
       console.log('🔥 TransactionService: Documento preparado:', docData);
       console.log('🔥 TransactionService: Tentando salvar no Firestore...');
       
-      // Implementar retry logic
       let attempts = 0;
       const maxAttempts = 3;
       let docRef;
@@ -79,15 +76,14 @@ export class TransactionService {
           console.log(`🔥 TransactionService: Tentativa ${attempts}/${maxAttempts}`);
           
           docRef = await addDoc(collection(db, this.collectionName), docData);
-          break; // Sucesso, sair do loop
+          break;
         } catch (retryError: any) {
           console.warn(`⚠️ TransactionService: Tentativa ${attempts} falhou:`, retryError.message);
           
           if (attempts === maxAttempts) {
-            throw retryError; // Última tentativa, propagar erro
+            throw retryError;
           }
           
-          // Aguardar antes da próxima tentativa
           await new Promise(resolve => setTimeout(resolve, 2000 * attempts));
         }
       }
@@ -110,7 +106,6 @@ export class TransactionService {
     }
   }
 
-  // Buscar transações do usuário
   async getUserTransactions(
     userId: string, 
     filter?: TransactionFilter,
@@ -124,7 +119,6 @@ export class TransactionService {
         orderBy('date', 'desc')
       );
 
-      // Aplicar filtros
       if (filter?.startDate) {
         q = query(q, where('date', '>=', Timestamp.fromDate(filter.startDate)));
       }
@@ -138,7 +132,6 @@ export class TransactionService {
         q = query(q, where('type', '==', filter.type));
       }
 
-      // Paginação
       if (lastDoc) {
         q = query(q, startAfter(lastDoc));
       }
@@ -160,7 +153,6 @@ export class TransactionService {
         newLastDoc = doc;
       });
 
-      // Filtro por termo de busca (feito no cliente)
       let filteredTransactions = transactions;
       if (filter?.searchTerm) {
         const searchTerm = filter.searchTerm.toLowerCase();
@@ -181,7 +173,6 @@ export class TransactionService {
     }
   }
 
-  // Buscar transação por ID
   async getTransactionById(transactionId: string): Promise<Transaction | null> {
     try {
       const docRef = doc(db, this.collectionName, transactionId);
@@ -205,7 +196,6 @@ export class TransactionService {
     }
   }
 
-  // Atualizar transação
   async updateTransaction(transactionId: string, userId: string, updates: Partial<TransactionInput>): Promise<void> {
     try {
       const docRef = doc(db, this.collectionName, transactionId);
@@ -215,21 +205,17 @@ export class TransactionService {
         updatedAt: Timestamp.fromDate(new Date())
       };
 
-      // Remover receiptFile do updateData pois não pode ser salvo diretamente
       delete updateData.receiptFile;
 
-      // Se há um novo arquivo de recibo, fazer upload
       if (updates.receiptFile) {
         console.log('📎 TransactionService: Fazendo upload do novo recibo...');
         
-        // Buscar transação atual para deletar recibo antigo se existir
         const currentTransaction = await this.getTransactionById(transactionId);
         if (currentTransaction?.receiptUrl) {
           console.log('🗑️ TransactionService: Deletando recibo antigo...');
           await this.deleteReceipt(currentTransaction.receiptUrl);
         }
         
-        // Upload do novo recibo
         const uploadResult = await this.uploadReceipt(userId, updates.receiptFile);
         updateData.receiptUrl = uploadResult.url;
         updateData.receiptName = uploadResult.name;
@@ -247,18 +233,14 @@ export class TransactionService {
     }
   }
 
-  // Deletar transação
   async deleteTransaction(transactionId: string): Promise<void> {
     try {
-      // Buscar a transação para obter URL do recibo
       const transaction = await this.getTransactionById(transactionId);
       
-      // Deletar recibo se existir
       if (transaction?.receiptUrl) {
         await this.deleteReceipt(transaction.receiptUrl);
       }
 
-      // Deletar documento
       await deleteDoc(doc(db, this.collectionName, transactionId));
     } catch (error) {
       console.error('Erro ao deletar transação:', error);
@@ -266,7 +248,6 @@ export class TransactionService {
     }
   }
 
-  // Upload de recibo
   private async uploadReceipt(userId: string, file: File): Promise<{ url: string, name: string }> {
     try {
       const timestamp = Date.now();
@@ -283,18 +264,15 @@ export class TransactionService {
     }
   }
 
-  // Deletar recibo
   private async deleteReceipt(receiptUrl: string): Promise<void> {
     try {
       const storageRef = ref(storage, receiptUrl);
       await deleteObject(storageRef);
     } catch (error) {
       console.error('Erro ao deletar recibo:', error);
-      // Não propagar erro pois a transação pode ser deletada mesmo se o recibo falhar
     }
   }
 
-  // Obter resumo financeiro
   async getTransactionSummary(userId: string, filter?: TransactionFilter): Promise<TransactionSummary> {
     try {
       const { transactions } = await this.getUserTransactions(userId, filter, 1000);
@@ -319,7 +297,6 @@ export class TransactionService {
     }
   }
 
-  // Obter resumo por categoria
   async getCategorySummary(userId: string, type: 'income' | 'expense', filter?: TransactionFilter): Promise<CategorySummary[]> {
     try {
       const { transactions } = await this.getUserTransactions(userId, { ...filter, type }, 1000);

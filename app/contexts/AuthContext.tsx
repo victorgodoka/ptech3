@@ -33,7 +33,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       return;
     }
 
-    // Verificar estado inicial imediatamente
     const initialUser = auth.currentUser;
     console.log('🔍 Initial user check:', initialUser?.email || 'No user');
     
@@ -42,11 +41,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     
     console.log('✅ Initial state set - Loading: false, User:', initialUser?.email || 'null');
 
-    // Configurar listener para mudanças futuras
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       console.log('🔥 Auth state changed:', firebaseUser?.email || 'No user');
       setUser(firebaseUser);
-      // Não alterar loading aqui, pois já foi definido como false
     });
 
     return () => {
@@ -55,7 +52,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     };
   }, [])
 
-  // Add additional logging for debugging
   useEffect(() => {
     console.log('AuthProvider state:', { 
       hasUser: !!user, 

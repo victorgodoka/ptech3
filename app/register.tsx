@@ -42,14 +42,12 @@ export default function Register() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Logo e Título */}
       <View style={styles.logoContainer}>
         <Image source={require('../assets/images/icon.png')} style={styles.logo} />
         <Text style={styles.appTitle}>cashapp.exe</Text>
         <Text style={styles.pageTitle}>Sign up</Text>
       </View>
 
-      {/* Formulário */}
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <TextInput
@@ -106,7 +104,6 @@ export default function Register() {
         </TouchableOpacity>
       </View>
       
-      {/* Link para login */}
       <View style={styles.linkContainer}>
         <Text style={styles.linkText}>
           Already have an account?{' '}

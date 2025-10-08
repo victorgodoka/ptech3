@@ -7,7 +7,6 @@ import {
 } from 'firebase/auth';
 import { app } from './config';
 
-// Initialize auth - simplified and more reliable
 let auth: any;
 
 try {
@@ -15,7 +14,6 @@ try {
   auth = getAuth(app);
   console.log('Firebase Auth initialized successfully');
   
-  // Verificar se auth está funcionando
   if (auth) {
     console.log('Auth object created:', { 
       currentUser: auth.currentUser?.email || 'No user',
@@ -55,5 +53,4 @@ export const signOutUser = async (): Promise<void> => {
 
 export { auth };
 
-// Export default para evitar warning do Expo Router
 export default auth;

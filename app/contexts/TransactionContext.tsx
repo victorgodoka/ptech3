@@ -7,7 +7,6 @@ import { useAuth } from './AuthContext';
 import { useLoading } from './LoadingContext';
 
 interface TransactionContextType {
-  // Estado
   transactions: Transaction[];
   loading: boolean;
   summary: TransactionSummary | null;
@@ -15,7 +14,6 @@ interface TransactionContextType {
   hasMore: boolean;
   error: string | null;
   
-  // Ações
   loadTransactions: (filter?: TransactionFilter, refresh?: boolean) => Promise<void>;
   createTransaction: (data: TransactionInput) => Promise<string>;
   updateTransaction: (id: string, data: Partial<TransactionInput>) => Promise<void>;
@@ -54,7 +52,6 @@ export const TransactionProvider: React.FC<TransactionProviderProps> = ({ childr
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | undefined>();
   const [currentFilter, setCurrentFilter] = useState<TransactionFilter | undefined>();
 
-  // Limpar estado quando usuário muda
   useEffect(() => {
     if (!user) {
       setTransactions([]);
@@ -98,7 +95,7 @@ export const TransactionProvider: React.FC<TransactionProviderProps> = ({ childr
       }
 
       setLastDoc(result.lastDoc);
-      setHasMore(result.transactions.length === 10); // Se retornou 10, pode ter mais
+      setHasMore(result.transactions.length === 10);
     } catch (err: any) {
       setError(err.message || 'Erro ao carregar transações');
     } finally {
@@ -122,11 +119,9 @@ export const TransactionProvider: React.FC<TransactionProviderProps> = ({ childr
 
       const transactionId = await transactionService.createTransaction(user.uid, transactionData);
       
-      // Recarregar transações para incluir a nova
       setGlobalLoading(true, 'Atualizando dados...');
       await loadTransactions(currentFilter, true);
       
-      // Recarregar resumo
       await loadSummary(currentFilter);
       
       return transactionId;
@@ -149,10 +144,8 @@ export const TransactionProvider: React.FC<TransactionProviderProps> = ({ childr
 
       await transactionService.updateTransaction(id, user.uid, updates);
       
-      // Recarregar transações para incluir a atualização
       await loadTransactions(currentFilter, true);
       
-      // Recarregar resumo
       await loadSummary(currentFilter);
     } catch (err: any) {
       setError(err.message || 'Erro ao atualizar transação');
@@ -172,10 +165,8 @@ export const TransactionProvider: React.FC<TransactionProviderProps> = ({ childr
 
       await transactionService.deleteTransaction(id);
       
-      // Remover transação da lista local
       setTransactions(prev => prev.filter(t => t.id !== id));
       
-      // Recarregar resumo
       await loadSummary(currentFilter);
     } catch (err: any) {
       setError(err.message || 'Erro ao deletar transação');
@@ -230,25 +221,20 @@ export const TransactionProvider: React.FC<TransactionProviderProps> = ({ childr
       const mockTransactions = mockDataService.generateMockTransactions();
       let processedCount = 0;
 
-      // Processar transações em lotes para melhor performance
       const batchSize = 10;
       for (let i = 0; i < mockTransactions.length; i += batchSize) {
         const batch = mockTransactions.slice(i, i + batchSize);
         
-        // Processar lote atual
         const promises = batch.map(async (mockTransaction) => {
-          // Criar transações sem anexos para evitar erros
           return transactionService.createTransaction(user.uid, mockTransaction);
         });
 
         await Promise.all(promises);
         processedCount += batch.length;
         
-        // Atualizar progresso
         setGlobalLoading(true, `Criando transações... ${processedCount}/${mockTransactions.length}`);
       }
 
-      // Recarregar dados após inserir todas as transações
       setGlobalLoading(true, 'Atualizando dados...');
       await loadTransactions(currentFilter, true);
       await loadSummary(currentFilter);

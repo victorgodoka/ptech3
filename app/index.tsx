@@ -30,12 +30,10 @@ export default function Login() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Logo e Título */}
       <View style={styles.logoContainer}>
         <Image source={require('../assets/images/icon.png')} style={styles.logo} />
       </View>
 
-      {/* Formulário */}
       <View style={styles.formContainer}>
         <TextInput
           value={email}
@@ -70,11 +68,9 @@ export default function Login() {
         </TouchableOpacity>
       </View>
 
-      {/* Link para registro */}
       <View style={styles.linksContainer}>
         <Text style={styles.linkText}>
           Don't have an account?{' '}
-          {/* @ts-ignore */}
           <Link href="/register">
             <Text style={styles.linkHighlight}>Sign up</Text>
           </Link>

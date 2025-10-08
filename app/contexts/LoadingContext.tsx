@@ -26,7 +26,6 @@ export const LoadingProvider: React.FC<LoadingProviderProps> = ({ children }) =>
     <LoadingContext.Provider value={{ isLoading, setLoading, loadingMessage }}>
       {children}
       
-      {/* Loading Overlay */}
       <Modal
         transparent={true}
         animationType="fade"

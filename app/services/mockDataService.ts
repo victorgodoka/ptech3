@@ -1,7 +1,6 @@
 import { TransactionInput } from '../types/transaction';
 
 export interface MockTransactionData extends TransactionInput {
-  // Removido hasAttachment - não usaremos anexos no mock
 }
 
 export const mockDataService = {
@@ -9,7 +8,6 @@ export const mockDataService = {
   generateMockTransactions: (): MockTransactionData[] => {
     const transactions: MockTransactionData[] = [];
     
-    // Categorias e dados para gerar transações realistas
     const incomeCategories = ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Prêmios'];
     const expenseCategories = ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Entretenimento', 'Compras', 'Contas'];
     
@@ -31,9 +29,8 @@ export const mockDataService = {
       'Contas': ['Luz', 'Água', 'Internet', 'Telefone', 'Aluguel', 'Cartão de Crédito']
     };
 
-    // Gerar 200 transações
     for (let i = 0; i < 200; i++) {
-      const isIncome = Math.random() < 0.3; // 30% receitas, 70% despesas
+      const isIncome = Math.random() < 0.3;
       const type: 'income' | 'expense' = isIncome ? 'income' : 'expense';
       
       let category: string;
@@ -49,17 +46,14 @@ export const mockDataService = {
         title = titles[Math.floor(Math.random() * titles.length)];
       }
       
-      // Gerar valor em centavos (R$ 5,00 a R$ 2.000,00)
-      const minAmount = 500; // R$ 5,00
-      const maxAmount = isIncome ? 500000 : 200000; // Receitas até R$ 5.000, despesas até R$ 2.000
+      const minAmount = 500;
+      const maxAmount = isIncome ? 500000 : 200000;
       const amount = Math.floor(Math.random() * (maxAmount - minAmount)) + minAmount;
       
-      // Data aleatória nos últimos 90 dias
       const daysAgo = Math.floor(Math.random() * 90);
       const date = new Date();
       date.setDate(date.getDate() - daysAgo);
       
-      // Descrições opcionais
       const descriptions = [
         '',
         'Pagamento realizado via PIX',
@@ -82,7 +76,6 @@ export const mockDataService = {
       transactions.push(transaction);
     }
     
-    // Ordenar por data (mais recentes primeiro)
     return transactions.sort((a, b) => b.date.getTime() - a.date.getTime());
   }
 };

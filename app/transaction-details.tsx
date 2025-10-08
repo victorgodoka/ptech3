@@ -120,7 +120,6 @@ const TransactionDetailsContent = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
@@ -130,7 +129,6 @@ const TransactionDetailsContent = () => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Transaction Type Badge */}
         <View style={styles.typeBadgeContainer}>
           <View style={[
             styles.typeBadge,
@@ -147,7 +145,6 @@ const TransactionDetailsContent = () => {
           </View>
         </View>
 
-        {/* Amount Display */}
         <View style={styles.amountSection}>
           <Text style={[
             styles.amountValue,
@@ -157,15 +154,12 @@ const TransactionDetailsContent = () => {
           </Text>
         </View>
 
-        {/* Details Section */}
         <View style={styles.detailsSection}>
-          {/* Title */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Título</Text>
             <Text style={styles.fieldValue}>{transaction.title}</Text>
           </View>
 
-          {/* Category */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Categoria</Text>
             <View style={styles.categoryBadge}>
@@ -173,7 +167,6 @@ const TransactionDetailsContent = () => {
             </View>
           </View>
 
-          {/* Description */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Descrição</Text>
             <Text style={styles.fieldValue}>
@@ -181,13 +174,11 @@ const TransactionDetailsContent = () => {
             </Text>
           </View>
 
-          {/* Date */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>Data</Text>
             <Text style={styles.fieldValue}>{formatDate(transaction.date)}</Text>
           </View>
 
-          {/* Receipt */}
           {transaction.receiptUrl && (
             <View style={styles.fieldContainer}>
               <Text style={styles.fieldLabel}>Anexo</Text>
@@ -202,7 +193,6 @@ const TransactionDetailsContent = () => {
           )}
         </View>
 
-        {/* Action Buttons */}
         <View style={styles.actionsContainer}>
           <TouchableOpacity
             style={[styles.actionButton, styles.editButton]}

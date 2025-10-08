@@ -14,7 +14,6 @@ const DashboardContent = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<'transactions' | 'charts'>('transactions');
 
-  // Carregar transações ao montar o componente
   useEffect(() => {
     if (user) {
       console.log('🏠 Dashboard: Loading transactions for user:', user.email);
@@ -56,7 +55,6 @@ const DashboardContent = () => {
     return colors[index % colors.length];
   };
 
-  // Agrupar transações por categoria
   const getCategoryData = (type: 'expense' | 'income') => {
     const filtered = transactions.filter(t => t.type === type);
     const categoryTotals: Record<string, number> = {};
@@ -76,7 +74,6 @@ const DashboardContent = () => {
       .sort((a, b) => b.amount - a.amount);
   };
 
-  // Obter transações dos últimos 7 dias
   const getLast7DaysData = () => {
     const days = [];
     const today = new Date();
@@ -136,7 +133,6 @@ const DashboardContent = () => {
     );
   };
 
-  // Pegar as 4 transações mais recentes
   const recentTransactions = transactions.slice(0, 4);
   
   console.log('🏠 Dashboard render - Transactions count:', transactions.length);
@@ -181,7 +177,6 @@ const DashboardContent = () => {
 
   return (
     <View style={styles.container}>
-      {/* Overlay para fechar menu */}
       {menuVisible && (
         <TouchableOpacity 
           style={styles.overlay}
@@ -190,7 +185,6 @@ const DashboardContent = () => {
         />
       )}
       
-      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.profileAvatar}>
@@ -207,7 +201,6 @@ const DashboardContent = () => {
           <Ionicons name="menu" size={24} color="#ffffff" />
         </TouchableOpacity>
         
-        {/* Dropdown Menu */}
         {menuVisible && (
           <View style={styles.dropdownMenu}>
             <TouchableOpacity 
@@ -242,7 +235,6 @@ const DashboardContent = () => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Balance Card */}
         <View style={styles.balanceCard}>
           <View style={styles.balanceCardGradient}>
             <View style={styles.balanceCardBlur}>
@@ -267,7 +259,6 @@ const DashboardContent = () => {
           </View>
         </View>
 
-        {/* Tabs Section */}
         <View style={styles.tabsSection}>
           <View style={styles.tabsHeader}>
             <TouchableOpacity 
@@ -341,7 +332,6 @@ const DashboardContent = () => {
               <View style={styles.chartsContent}>
                 {transactions.length > 0 ? (
                   <>
-                    {/* Summary Cards */}
                     <View style={[styles.summaryCard, styles.incomeCard]}>
                       <Ionicons name="arrow-down" size={24} color="#10b981" />
                       <Text style={styles.summaryCardLabel}>Receitas</Text>
@@ -353,7 +343,6 @@ const DashboardContent = () => {
                       <Text style={styles.summaryCardValue}>{formatCurrency(summary?.totalExpenses || 0)}</Text>
                     </View>
 
-                    {/* Gráfico de Pizza - Despesas por Categoria */}
                     <View style={styles.chartSection}>
                       <Text style={styles.chartTitle}>Despesas por Categoria</Text>
                       {getCategoryData('expense').length > 0 ? (
@@ -376,7 +365,6 @@ const DashboardContent = () => {
                       )}
                     </View>
 
-                    {/* Gráfico de Barras - Top Receitas */}
                     <View style={styles.chartSection}>
                       <Text style={styles.chartTitle}>Receitas por Categoria</Text>
                       {getCategoryData('income').length > 0 ? (
@@ -409,7 +397,6 @@ const DashboardContent = () => {
                       )}
                     </View>
 
-                    {/* Gráfico de Linha - Últimos 7 Dias */}
                     <View style={styles.chartSection}>
                       <Text style={styles.chartTitle}>Últimos 7 Dias</Text>
                       {getLast7DaysData().some(d => d.income > 0 || d.expense > 0) ? (
@@ -463,7 +450,6 @@ const DashboardContent = () => {
                       </View>
                     </View>
 
-                    {/* Resumo Geral */}
                     <View style={styles.chartSection}>
                       <Text style={styles.chartTitle}>Resumo Geral</Text>
                       <View style={styles.monthlyTrend}>
@@ -508,7 +494,6 @@ const DashboardContent = () => {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation - Apenas na aba de transações */}
       {activeTab === 'transactions' && (
         <View style={styles.bottomNav}>
         <View style={styles.bottomNavGradient}>
@@ -996,7 +981,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
   },
-  // Estilos do Gráfico de Pizza
   pieChartContainer: {
     gap: 12,
   },
@@ -1039,7 +1023,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#94a3b8',
   },
-  // Estilos do Gráfico de Barras
   barChartContainer: {
     gap: 16,
   },
@@ -1067,7 +1050,6 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     fontWeight: '500',
   },
-  // Estilos do Gráfico de Linha (Últimos 7 Dias)
   lineChartContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

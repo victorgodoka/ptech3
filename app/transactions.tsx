@@ -161,7 +161,6 @@ const TransactionsContent = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -188,10 +187,8 @@ const TransactionsContent = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Filters Panel */}
       {showFilters && (
         <ScrollView style={styles.filtersPanel} showsVerticalScrollIndicator={false}>
-          {/* Type Filter */}
           <View style={styles.filterSection}>
             <Text style={styles.filterLabel}>Tipo</Text>
             <View style={styles.filterButtons}>
@@ -222,7 +219,6 @@ const TransactionsContent = () => {
             </View>
           </View>
 
-          {/* Period Filter */}
           <View style={styles.filterSection}>
             <Text style={styles.filterLabel}>Período</Text>
             <View style={styles.filterButtons}>
@@ -261,7 +257,6 @@ const TransactionsContent = () => {
             </View>
           </View>
 
-          {/* Category Filter */}
           <View style={styles.filterSection}>
             <Text style={styles.filterLabel}>Categoria</Text>
             <View style={styles.filterButtons}>
@@ -285,7 +280,6 @@ const TransactionsContent = () => {
             </View>
           </View>
 
-          {/* Action Buttons */}
           <View style={styles.filterActions}>
             <TouchableOpacity
               style={styles.clearButton}
@@ -306,7 +300,6 @@ const TransactionsContent = () => {
         </ScrollView>
       )}
 
-      {/* Transactions List */}
       <FlatList
         style={styles.content}
         data={transactions}
@@ -395,7 +388,6 @@ const TransactionsContent = () => {
         }
       />
 
-      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <View style={styles.bottomNavGradient}>
           <View style={styles.bottomNavBlur}>
